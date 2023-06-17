@@ -1,4 +1,5 @@
 #!/bin/bash
+#downloading the updates
 sudo yum update -y
 sudo yum install git -y
 sudo yum install python3-pip -y
