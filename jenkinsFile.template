@@ -44,46 +44,6 @@ pipeline {
             }
         }
 
-        /*
-        stage('Test') {
-            steps {
-                withCredentials([
-                    [
-                        $class: 'AmazonWebServicesCredentialsBinding',
-                        credentialsId: 'aws-jenkins',
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                    ],
-                    [
-                        $class: 'SSHUserPrivateKeyBinding',
-                        credentialsId: 'ec2Test',
-                        usernameVariable: 'SSH_USERNAME',
-                        privateKeyVariable: 'SSH_PRIVATE_KEY'
-                    ]
-                ]) {
-                    sh 'echo "Deploying..."'
-                    sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@44.205.246.225:/home/ec2-user/'
-                    
-                    def remote = [:]
-                    remote.name = 'EC2 Instance'
-                    remote.host = '44.205.246.225' // Replace with your EC2 instance IP or hostname
-                    remote.user = SSH_USERNAME
-                    remote.privateKey = SSH_PRIVATE_KEY
-                    remote.port = 22 // SSH port (default is 22)
-                    remote.allowAnyHosts = true
-                    remote.failOnError = true
-                    
-                    sshCommand remote: remote, command: 'sudo tar -xzf myflaskproject.tar.gz'
-                    sshCommand remote: remote, command: 'rm -fr myflaskproject.tar.gz'
-                    sshCommand remote: remote, command: 'cd myflaskproject'
-                    sshCommand remote: remote, command: 'ls'
-                    sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh'
-                    sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/tests.sh'
-                }
-            }
-        }
-        */
-
         stage('Testing') {
             steps {
                 script {
@@ -91,4 +51,16 @@ pipeline {
                         sshagent(['ssh_ec2']) {
                             sh """
                             ssh -i $KEY_FILE ec2-user@3.86.181.255 '
-                            sudo tar -xzf my
+                            sudo tar -xzf myflaskproject.tar.gz
+                            rm -rf myflaskproject.tar.gz
+                            sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh
+                            sudo bash /home/ec2-user/tests/myflaskproject/tests.sh
+                            '
+                            """
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
