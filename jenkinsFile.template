@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage("Upload to s3") {
+        stage("Upload to S3") {
             steps {
                 withCredentials([
                     [
@@ -49,31 +49,40 @@ pipeline {
 
         stage('Test') {
             steps {
-                withCredentials([
-                    [
-                        $class: 'AmazonWebServicesCredentialsBinding',
-                        credentialsId: 'aws-jenkins',
-                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        sshUserPrivateKey(credentialsId: 'Test_ec2', keyFileVariable: 'SSH_KEY')
-                    ]
-                ]){
-                    sh 'echo "Deploying..."'
-                    sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@44.205.246.225:/home/ec2-user/'
-                    def remote = [:]
+                script {
+                    withCredentials([
+                        [
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'aws-jenkins',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ],
+                        [
+                            $class: 'UsernamePasswordMultiBinding',
+                            credentialsId: 'Test_ec2',
+                            usernameVariable: 'SSH_USERNAME',
+                            passwordVariable: 'SSH_PASSWORD'
+                        ]
+                    ]) {
+                        sh 'echo "Deploying..."'
+                        sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@44.205.246.225:/home/ec2-user/'
+                        
+                        def remote = [:]
                         remote.name = 'EC2 Instance'
                         remote.host = '44.205.246.225' // Replace with your EC2 instance IP or hostname
-                        remote.user = 'ec2-user' // Replace with the appropriate username
+                        remote.user = SSH_USERNAME
+                        remote.password = SSH_PASSWORD
                         remote.port = 22 // SSH port (default is 22)
                         remote.allowAnyHosts = true
-                        remote.identityFile = SSH_KEY
                         remote.failOnError = true
+                        
                         sshCommand remote: remote, command: 'sudo tar -xzf myflaskproject.tar.gz'
                         sshCommand remote: remote, command: 'rm -fr myflaskproject.tar.gz'
                         sshCommand remote: remote, command: 'cd myflaskproject'
                         sshCommand remote: remote, command: 'ls'
                         sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh'
                         sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/tests.sh'
+                    }
                 }
             }
         }
