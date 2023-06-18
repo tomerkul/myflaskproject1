@@ -59,7 +59,7 @@ pipeline {
                         ],
                         [
                             $class: 'SSHUserPrivateKeyBinding',
-                            credentialsId: 'Test_ec2',
+                            credentialsId: 'ec2-test',
                             usernameVariable: 'SSH_USERNAME',
                             privateKeyVariable: 'SSH_PRIVATE_KEY'
                         ]
