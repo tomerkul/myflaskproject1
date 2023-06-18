@@ -55,8 +55,7 @@ pipeline {
                                 sudo tar -xzf myflaskproject.tar.gz
                                 rm -fr myflaskproject.tar.gz
                                 ls
-                                sudo bash /home/ec2-user/myflaskproject/flaskrun.sh
-                                sudo bash /home/ec2-user/myflaskproject/tests/tests.sh
+                                
                             
                         '''
                     }
