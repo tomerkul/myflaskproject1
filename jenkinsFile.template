@@ -52,13 +52,8 @@ pipeline {
                 script {
                     withCredentials([
                         [
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: 'aws-jenkins',
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ],
                         [
-                            $class: 'UsernamePasswordMultiBinding',
+                            $class: 'SSHUserPrivateKeyBinding',
                             credentialsId: 'Test_ec2',
                             usernameVariable: 'SSH_USERNAME',
                             passwordVariable: 'SSH_PRIVATE_KEY'
