@@ -45,29 +45,29 @@ pipeline {
         }
 
         stage('Test') {
-                        steps {
-            withCredentials([
-            sshUserPrivateKey(credentialsId: 'ec2Test', keyFileVariable: 'SSH_PRIVATE_KEY')
-        ]) {
-            sh 'echo "Deploying..."'
-            sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@44.205.246.225:/home/ec2-user/'
+            steps {
+                withCredentials([
+                    sshUserPrivateKey(credentialsId: 'ec2Test', keyFileVariable: 'SSH_PRIVATE_KEY')
+                ]) {
+                    sh 'echo "Deploying..."'
+                    sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@44.205.246.225:/home/ec2-user/'
 
-            def remote = [:]
-            remote.name = 'EC2 Instance'
-            remote.host = '44.205.246.225' // Replace with your EC2 instance IP or hostname
-            remote.user = 'ec2-user'
-            remote.identityFile = env.SSH_PRIVATE_KEY
-            remote.allowAnyHosts = true
-            remote.failOnError = true
+                    def remote = [:]
+                    remote.name = 'EC2 Instance'
+                    remote.host = '3.86.181.255' // Replace with your EC2 instance IP or hostname
+                    remote.user = 'ec2-user'
+                    remote.identityFile = env.SSH_PRIVATE_KEY
+                    remote.allowAnyHosts = true
+                    remote.failOnError = true
 
-            sshCommand remote: remote, command: 'sudo tar -xzf myflaskproject.tar.gz'
-            sshCommand remote: remote, command: 'rm -fr myflaskproject.tar.gz'
-            sshCommand remote: remote, command: 'cd myflaskproject'
-            sshCommand remote: remote, command: 'ls'
-            sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh'
-            sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/tests.sh'
+                    sshCommand remote: remote, command: 'sudo tar -xzf myflaskproject.tar.gz'
+                    sshCommand remote: remote, command: 'rm -fr myflaskproject.tar.gz'
+                    sshCommand remote: remote, command: 'cd myflaskproject'
+                    sshCommand remote: remote, command: 'ls'
+                    sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh'
+                    sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/tests.sh'
+                }
+            }
         }
-    }
-}
     }
 }
