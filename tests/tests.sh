@@ -2,4 +2,4 @@
 set -ex
 
 #test1
-curl http://44.205.246.225:5000
+curl http://http://3.86.181.255:5000
