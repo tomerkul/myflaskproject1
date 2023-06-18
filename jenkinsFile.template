@@ -49,9 +49,9 @@ pipeline {
                 script {
                     // Establish SSH connection to remote host
                     sshCommand remote: [
-                        host: '3.86.181.255', // Replace with the actual remote host
-                        user: 'ec2-user', // Replace with the actual username
-                        password: credentials('ssh_ec2') // Replace with the ID of your SSH credentials in Jenkins
+                        host: '3.86.181.255', 
+                        user: 'ec2-user', 
+                        password: credentials('SSH_KEY') 
                     ], command: """
                         sudo tar -xzf myflaskproject.tar.gz
                         rm -fr myflaskproject.tar.gz
