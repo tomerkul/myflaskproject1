@@ -49,7 +49,6 @@ pipeline {
 
         stage('Test') {
             steps {
-                script {
                     withCredentials([
                         [
                             $class: 'AmazonWebServicesCredentialsBinding',
@@ -83,7 +82,6 @@ pipeline {
                         sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh'
                         sshCommand remote: remote, command: 'sudo bash /home/ec2-user/tests/myflaskproject/tests.sh'
                     }
-                }
             }
         }
     }
