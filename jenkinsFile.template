@@ -52,12 +52,22 @@ pipeline {
                         host: '3.86.181.255',
                         user: 'ec2-user',
                         password: credentials('SSH_KEY'),
-                        name: 'test' // Provide a name for the remote configuration
+                        name: 'test', // Provide a name for the remote configuration
+                        allowAnyHosts: false,
+                        knownHosts: '''\
+                            |ec2-user@3.86.181.255 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDVVrzvm7jz
+                            |+2tuYweVPh97RMff8fI57zW8cO61OL6Hyw2C34qOWiZ7uSy2aZEP3JgT6IAcJVRXjDnU
+                            |/Q4UpGR8L5YD9p3gM0b1liYP/HLr6bkWyioIgIqw4IAzLx1aZ5MYhqCpLnU/ujsnSByH
+                            |zAFsEeynM1xPm/2U5OpvoV44U7E1WUWozFl/yLrZvPwGG1x8v7V/yR8Eh2XUf0UhyPzF
+                            |LdPTcmvSMo5b+bJyzWLLG0ZprdxB0jCBr0UG0Z2jHIDwUMUsoCZyz/2FcUr5yF5NduVb
+                            |r+/To0i2yFb0DcTVsZhzFrZacHR5H/5P+TC7S+ty/k8z0AldRRaPmymxxgcy5QPY+7OS
+                            |cStNjHzFmP0tThFmU7/Xb0SiTfK
+                            |'''
                     ], command: """
                         sudo tar -xzf myflaskproject.tar.gz
                         rm -fr myflaskproject.tar.gz
                         sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh
-                        sudo bash /home/ec2-user/tests/myflaskproject/tests.sh
+                        sudo bash /home/ec2-user/tests/myflaskproject/tests
                     """
                 }
             }
