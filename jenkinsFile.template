@@ -65,6 +65,8 @@ pipeline {
                     sh 'cd myflaskproject'
                     sh 'rm -fr myflaskproject.tar.gz'
                     sh 'ls'
+                    sh 'cd /home/ec2-user/tests/myflaskproject/'
+                    sh 'ls'
                     sh 'sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh'
                     sh 'sudo bash /home/ec2-user/tests/myflaskproject/tests.sh'
                 }
