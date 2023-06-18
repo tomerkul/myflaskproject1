@@ -48,6 +48,7 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
                     sshagent(['SSH_ec2']) {
+                    sh 'cat $KEY_FILE'
                     sh """
                         ssh -tt -i $KEY_FILE ec2-user@3.86.181.255
                         sudo tar -xzf myflaskproject.tar.gz
