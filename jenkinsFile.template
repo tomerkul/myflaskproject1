@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        /*stage('Deploy') {
+        stage('Deploy') {
             steps {
                 withCredentials([
                     [
@@ -67,6 +67,6 @@ pipeline {
                 // Perform the deploy step here
                 sh 'echo "Deploying..."'
                 sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflask.tar.gz ec2-user@44.205.246.225:/home/ec2-user/jen'
-            }}*/
+            }}
         }
     }
