@@ -50,10 +50,10 @@ pipeline {
                     sshagent(['SSH_ec2']) {
                     sh 'cat $KEY_FILE'
                     sh """
-                        ssh -tt -i $KEY_FILE ec2-user@3.86.181.255
+                        ssh -tt -i $KEY_FILE ec2-user@3.86.181.255'
                         sudo tar -xzf myflaskproject.tar.gz
                         rm -fr myflaskproject.tar.gz
-                        ls
+                        ls'
                     """
                 }
             }
