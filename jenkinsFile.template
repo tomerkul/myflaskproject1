@@ -51,10 +51,11 @@ pipeline {
             steps {
                 // Perform the test step here
                 sh 'echo "Testing..."'
+                sh 'bash tests/tests.sh'
             }
         }
 
-        stage('Deploy') {
+        stage('Test') {
             steps {
                 withCredentials([
                     [
@@ -65,8 +66,10 @@ pipeline {
                     ]
                 ]){
                 // Perform the deploy step here
-                sh 'echo "Deploying..."'
+                sh 'echo "test..."'
                 sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflask.tar.gz ec2-user@44.205.246.225:/home/ec2-user/jen'
+                sh
+                //to do - extrect tar.gz -> run flask -> run test
             }}
         }
     }
