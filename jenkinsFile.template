@@ -46,17 +46,13 @@ pipeline {
 
         stage('SSH Connection and Commands') {
             steps {
-                script {
-                    sshCommand remote: [
-                        host: '3.86.181.255',
-                        user: 'ec2-user',
-                        password: credentials('SSH_ec2'),
-                    ], command: """
-                        ssh -i SSH_ec2 ec2-user@3.86.181.255
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
+                    sshagent(['SSH_ec2']) {
+                    sh """
+                        ssh -i KEY_FILE ec2-user@3.86.181.255
                         sudo tar -xzf myflaskproject.tar.gz
                         rm -fr myflaskproject.tar.gz
-                        sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh
-                        sudo bash /home/ec2-user/tests/myflaskproject/tests
+                        ls
                     """
                 }
             }
