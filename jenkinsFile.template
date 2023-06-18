@@ -52,6 +52,7 @@ pipeline {
                         host: '3.86.181.255', 
                         user: 'ec2-user', 
                         password: credentials('SSH_KEY') 
+                        name: 'test' // Provide a name for the remote configuration
                     ], command: """
                         sudo tar -xzf myflaskproject.tar.gz
                         rm -fr myflaskproject.tar.gz
