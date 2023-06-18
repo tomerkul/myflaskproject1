@@ -46,7 +46,12 @@ pipeline {
 
         stage('SSH Connection and Commands') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')] , [
+                        $class: 'AmazonWebServicesCredentialsBinding',
+                        credentialsId: 'aws-jenkins',
+                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                    ]) {
                     sshagent(['SSH_ec2']) {
                         sh '''
                             sh 'sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@3.86.181.255:/home/ec2-user/'
