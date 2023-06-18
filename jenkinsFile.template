@@ -47,10 +47,10 @@ pipeline {
         stage('Testing') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh_ec2', keyFileVariable: 'KEY_FILE')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh_ec2', usernameVariable: 'SSH_USERNAME' , privateKeyVariable: 'SSH_PRIVATE_KEY')]) {
                         sshagent(['ssh_ec2']) {
                             sh """
-                            ssh -i $KEY_FILE ec2-user@3.86.181.255 '
+                            ssh -i SSH_PRIVATE_KEY ec2-user@3.86.181.255 '
                             sudo tar -xzf myflaskproject.tar.gz
                             rm -rf myflaskproject.tar.gz
                             sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh
