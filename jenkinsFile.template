@@ -69,7 +69,7 @@ pipeline {
                 sh 'echo "test..."'
                 sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflask.tar.gz ec2-user@44.205.246.225:/home/ec2-user/jen'
                 sh
-                //to do - extrect tar.gz -> run flask -> run test
+                //to do - extract tar.gz -> run flask -> run test
             }}
         }
     }
