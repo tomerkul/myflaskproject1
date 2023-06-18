@@ -68,8 +68,11 @@ pipeline {
                 // Perform the deploy step here
                 sh 'echo "test..."'
                 sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflask.tar.gz ec2-user@44.205.246.225:/home/ec2-user/jen'
-                sh
-                //to do - extract tar.gz -> run flask -> run test
+                sh 'ssh -i /home/tomer/.ssh/mykeyVir.pem ec2-user@44.205.246.225'
+                sh 'sudo tar -xzf myflask.tar.gz'
+                sh 'sudo bash flaskrun.sh'
+                sh 'sudo bash tests/tests.sh'
+                //to do - extract tar.gz(tar -xzf myflask.tar.gz) -> run flask(run service) -> run test(sh 'bash tests/tests.sh')
             }}
         }
     }
