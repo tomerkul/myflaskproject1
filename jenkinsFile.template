@@ -48,18 +48,16 @@ pipeline {
             steps {
                 script {
                     // Establish SSH connection to remote host
-                    sshCommand(
-                        remote: [
-                            host: '3.86.181.255', // Replace with the actual remote host
-                            user: 'ec2-user', // Replace with the actual username
-                            password: credentials('ssh_ec2') // Replace with the ID of your SSH credentials in Jenkins
-                        ],
+                    sshCommand remote: [
+                        host: '3.86.181.255', // Replace with the actual remote host
+                        user: 'ec2-user', // Replace with the actual username
+                        password: credentials('ssh_ec2') // Replace with the ID of your SSH credentials in Jenkins
+                    ], command: """
                         sudo tar -xzf myflaskproject.tar.gz
                         rm -fr myflaskproject.tar.gz
                         sudo bash /home/ec2-user/tests/myflaskproject/flaskrun.sh
                         sudo bash /home/ec2-user/tests/myflaskproject/tests.sh
-                        """
-                    )
+                    """
                 }
             }
         }
