@@ -66,8 +66,7 @@ pipeline {
                 ]){
                 // Perform the deploy step here
                 sh 'echo "Deploying..."'
-                sh 'cat /home/tomer/.ssh/mykeyVir.pem'
-                //sh 'scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflask.tar.gz ec2-user@34.239.129.240:/home/ec2-user/jenkins_project'
+                sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflask.tar.gz ec2-user@44.205.246.225:/home/ec2-user/jenkins_project'
             }}*/
         }
     }
