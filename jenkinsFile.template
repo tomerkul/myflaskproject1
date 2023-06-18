@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage("Upload") {
+        stage("Upload to s3") {
             steps {
                 withCredentials([
                     [
@@ -46,13 +46,6 @@ pipeline {
                 }
             }
         }
-
-        /*stage('Test1') {
-            steps {
-                // Perform the first test step here
-                sh 'echo "Testing..."'
-            }
-        }*/
 
         stage('Test') {
             steps {
@@ -69,7 +62,7 @@ pipeline {
                     sh 'sudo scp -i /home/tomer/.ssh/mykeyVir.pem -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@44.205.246.225:/home/ec2-user/'
                     sh 'ssh -i /home/tomer/.ssh/mykeyVir.pem ec2-user@44.205.246.225'
                     sh 'sudo tar -xzf myflaskproject.tar.gz'
-                    sh 'cd myflaskproject
+                    sh 'cd myflaskproject'
                     sh 'sudo bash flaskrun.sh'
                     sh 'sudo bash /home/ec2-user/tests/myflaskproject/tests.sh'
                 }
