@@ -58,10 +58,10 @@ pipeline {
                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ],
                         [
-                            $class: 'SSHUserPrivateKeyBinding',
+                            $class: 'UsernamePasswordMultiBinding',
                             credentialsId: 'Test_ec2',
                             usernameVariable: 'SSH_USERNAME',
-                            privateKeyVariable: 'SSH_PRIVATE_KEY'
+                            passwordVariable: 'SSH_PRIVATE_KEY'
                         ]
                     ]) {
                         sh 'echo "Deploying..."'
@@ -71,7 +71,7 @@ pipeline {
                         remote.name = 'EC2 Instance'
                         remote.host = '44.205.246.225' // Replace with your EC2 instance IP or hostname
                         remote.user = SSH_USERNAME
-                        remote.privateKey = SSH_PRIVATE_KEY
+                        remote.password = SSH_PRIVATE_KEY
                         remote.port = 22 // SSH port (default is 22)
                         remote.allowAnyHosts = true
                         remote.failOnError = true
