@@ -52,11 +52,16 @@ pipeline {
                 script {
                     withCredentials([
                         [
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: 'aws-jenkins',
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                        ],
                         [
                             $class: 'SSHUserPrivateKeyBinding',
                             credentialsId: 'Test_ec2',
                             usernameVariable: 'SSH_USERNAME',
-                            passwordVariable: 'SSH_PRIVATE_KEY'
+                            privateKeyVariable: 'SSH_PRIVATE_KEY'
                         ]
                     ]) {
                         sh 'echo "Deploying..."'
@@ -66,7 +71,7 @@ pipeline {
                         remote.name = 'EC2 Instance'
                         remote.host = '44.205.246.225' // Replace with your EC2 instance IP or hostname
                         remote.user = SSH_USERNAME
-                        remote.password = SSH_PRIVATE_KEY
+                        remote.privateKey = SSH_PRIVATE_KEY
                         remote.port = 22 // SSH port (default is 22)
                         remote.allowAnyHosts = true
                         remote.failOnError = true
