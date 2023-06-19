@@ -78,7 +78,7 @@ pipeline {
             }
         }
 
-        stage('Test2') {
+        stage('Deploy to Prodaction') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
                     withCredentials([
