@@ -99,7 +99,7 @@ pipeline {
                                     rm -fr myflaskproject.tar.gz
                                     ls
                                     sleep 10
-                                    sudo bash /home/ec2-user/myflaskproject/flaskrun.sh
+                                    sudo bash /home/ec2-user/myflaskproject/flaskrun.sh > /dev/null 2>&1 & disown
                                 '
                             '''
                         }
