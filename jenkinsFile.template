@@ -70,6 +70,7 @@ pipeline {
                                     sudo bash /home/ec2-user/myflaskproject/flaskrun.sh > /dev/null 2>&1 & disown
                                     sleep 5
                                     sudo bash /home/ec2-user/myflaskproject/tests/tests.sh
+                                    sudo bash /home/ec2-user/myflaskproject/flaskstop.sh
                                 '
                             '''
                         }
