@@ -7,6 +7,6 @@ if [ -z "$PID" ]; then
   echo "No process found running on port 5000"
 else
   # Terminate the process
-  sudo kill "$PID"
+  sudo kill -9 "$PID"
   echo "Flask stopped"
 fi
