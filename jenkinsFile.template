@@ -5,13 +5,12 @@ pipeline {
     }
 
     stages {
-
         stage('Cleanup') {
             steps {
-                env {
-            TEST_IP = "3.82.143.167"
-            PRODACT_IP = "44.202.26.0"
-        }
+                script {
+                    env.TEST_IP = "3.82.143.167"
+                    env.PRODACT_IP = "44.202.26.0"
+                }
                 sh 'echo "Performing cleanup..."'
                 sh 'rm -rf *'
             }
@@ -79,7 +78,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test2') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
                     withCredentials([
