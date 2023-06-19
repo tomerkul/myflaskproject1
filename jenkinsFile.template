@@ -59,7 +59,7 @@ pipeline {
                             sh '''
                                 sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz ec2-user@3.82.143.167:/home/ec2-user/
                                 ssh-keyscan 3.82.143.167 >> /var/lib/jenkins/.ssh/known_hosts
-                                ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@3.86.181.255 '
+                                ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@3.82.143.167 '
                                     sudo tar -xzf myflaskproject.tar.gz
                                     rm -fr myflaskproject.tar.gz
                                     ls
