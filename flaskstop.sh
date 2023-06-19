@@ -1,12 +1,13 @@
 #!/bin/bash
 
-# Find the process ID (PID) of the process running on port 5000
-PID=$(sudo lsof -t -i :5000)
+# Find the process IDs (PIDs) of the processes running on port 5000
+PIDS=$(sudo lsof -t -i :5000)
 
-if [ -z "$PID" ]; then
-  echo "No process found running on port 5000"
+if [ -z "$PIDS" ]; then
+  echo "No processes found running on port 5000"
 else
-  # Terminate the process
-  sudo kill -9 "$PID"
-  echo "Flask stopped"
+  for PID in $PIDS; do
+    sudo kill $PID
+    echo "Process with PID $PID has been terminated"
+  done
 fi
