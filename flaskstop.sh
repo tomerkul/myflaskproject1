@@ -1,22 +1,12 @@
 #!/bin/bash
 
-# Store the process ID (PID) of the Flask application
-FLASK_PID_FILE="/var/run/flask.pid"
+# Find the process ID (PID) of the process running on port 5000
+PID=$(sudo lsof -t -i :5000)
 
-# Function to stop the Flask application
-stop_flask() {
-    # Read the process ID from the file
-    if [ -f "$FLASK_PID_FILE" ]; then
-        FLASK_PID=$(cat "$FLASK_PID_FILE")
-        # Terminate the Flask application process
-        kill "$FLASK_PID"
-        # Remove the PID file
-        rm "$FLASK_PID_FILE"
-        echo "Flask application stopped."
-    else
-        echo "Flask application is not running."
-    fi
-}
-
-# Call the function to stop the Flask application
-stop_flask
+if [ -z "$PID" ]; then
+  echo "No process found running on port 5000"
+else
+  # Terminate the process
+  sudo kill "$PID"
+  echo "Flask stopped"
+fi
