@@ -9,7 +9,7 @@ pipeline {
             steps {
                 script {
                     env.TEST_IP = "3.82.143.167"
-                    env.PRODACT_IP = "3.83.48.41"
+                    env.PRODACT_IP = "54.167.152.56"
                 }
                 sh 'echo "Performing cleanup..."'
                 sh 'rm -rf *'
