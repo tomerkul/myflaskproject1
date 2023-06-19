@@ -5,13 +5,13 @@ pipeline {
     }
 
     stages {
-        env {
-            TEST_IP = "3.82.143.167"
-            PRODACT_IP = "44.202.26.0"
-        }
 
         stage('Cleanup') {
             steps {
+                env {
+            TEST_IP = "3.82.143.167"
+            PRODACT_IP = "44.202.26.0"
+        }
                 sh 'echo "Performing cleanup..."'
                 sh 'rm -rf *'
             }
