@@ -89,6 +89,8 @@ pipeline {
                         sh '''
                             sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/jenkins-flask
                             sudo tar -xzf /home/tomer/jenkins-flask/myflaskproject.tar.gz
+                            cd /home/tomer/jenkins-flask/
+                            ls
                             sudo rm -rf /home/tomer/jenkins-flask/myflaskproject.tar.gz
                         '''
             }
