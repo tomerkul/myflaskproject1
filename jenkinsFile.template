@@ -88,7 +88,8 @@ pipeline {
                     sshagent(['SSH_VM']) {
                         sh '''
                             sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/
-                            sudo tar -xzf /home/tomer/myflaskproject.tar.gz
+                            sudo tar -xzf /home/tomer/myflaskproject.tar.gz -C /home/tomer/
+
                         '''
             }
         }
