@@ -87,8 +87,8 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) { 
                     sshagent(['SSH_VM']) {
                         sh '''
-                            sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/jenkins-flask
-                            sudo tar -xzf /home/tomer/jenkins-flask/myflaskproject.tar.gz
+                            sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/
+                            sudo tar -xzf /home/tomer/myflaskproject.tar.gz
                         '''
             }
         }
