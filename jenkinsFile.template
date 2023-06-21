@@ -82,7 +82,7 @@ pipeline {
 
         stage('Deploy to Prodaction') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM_pub', keyFileVariable: 'KEY_FILE')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_TO_VM', keyFileVariable: 'KEY_FILE')]) {
                     withCredentials([
                         [
                             $class: 'AmazonWebServicesCredentialsBinding',
@@ -91,7 +91,7 @@ pipeline {
                             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                         ]
                     ]) {
-                        sshagent(['SSH_VM_pub']) {
+                        sshagent(['SSH_TO_VM']) {
                             sh '''
                                 sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/jenkins-flask
                                  sudo tar -xzf /home/tomer/jenkins-flask/myflaskproject.tar.gz
