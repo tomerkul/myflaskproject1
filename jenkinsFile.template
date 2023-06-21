@@ -72,6 +72,7 @@ pipeline {
                                     sleep 5
                                     sudo bash /home/ec2-user/myflaskproject/tests/tests.sh
                                     sudo bash /home/ec2-user/myflaskproject/flaskstop.sh
+                                    exit
                                 '
                             '''
                         }
