@@ -73,6 +73,7 @@ pipeline {
                                     sudo bash /home/ec2-user/myflaskproject/tests/tests.sh
                                     sudo bash /home/ec2-user/myflaskproject/flaskstop.sh
                                     exit
+                                    ls
                                 '
                             '''
                         }
@@ -83,16 +84,8 @@ pipeline {
 
         stage('Deploy to Prodaction') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_TO_VM', keyFileVariable: 'KEY_FILE')]) {
-                    withCredentials([
-                        [
-                            $class: 'AmazonWebServicesCredentialsBinding',
-                            credentialsId: 'aws-jenkins',
-                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                        ]
-                    ]) {
-                        sshagent(['SSH_TO_VM']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM_pub', keyFileVariable: 'KEY_FILE')]) { {
+                        sshagent(['SSH_VM_pub']) {
                             sh '''
                                 sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/jenkins-flask
                                  sudo tar -xzf /home/tomer/jenkins-flask/myflaskproject.tar.gz
