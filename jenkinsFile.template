@@ -84,17 +84,16 @@ pipeline {
 
         stage('Deploy to Prodaction') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'VM_PUBKEY', keyFileVariable: 'KEY_FILE')]) { {
-                        sshagent(['VM_PUBKEY']) {
-                            sh '''
-                                sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/jenkins-flask
-                                 sudo tar -xzf /home/tomer/jenkins-flask/myflaskproject.tar.gz
-                                '
-                            '''
-                        }
-                    }
-                }
+                withCredentials([sshUserPrivateKey(credentialsId: 'VM_PUBKEY', keyFileVariable: 'KEY_FILE')]) { 
+                    sshagent(['VM_PUBKEY']) {
+                        sh '''
+                            sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/jenkins-flask
+                            sudo tar -xzf /home/tomer/jenkins-flask/myflaskproject.tar.gz
+                        '''
             }
         }
+    }
+}
+
     }
 }
