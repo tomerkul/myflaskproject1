@@ -8,8 +8,8 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    env.TEST_IP = "3.82.143.167"
-                    env.PRODACT_IP = "54.167.152.56"
+                    env.TEST_IP = "44.202.63.7"
+                    env.PRODACT_IP = "54.209.127.11"
                     env.ANSIBLE_IP = "192.168.56.101"
                 }
                 sh 'echo "Performing cleanup..."'
@@ -94,7 +94,7 @@ pipeline {
                         sshagent(['SSH_TO_VM']) {
                             sh '''
                                 sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject.tar.gz tomer@$ANSIBLE_IP:/home/tomer/jenkins-flask
-                                 sudo tar -xzf /home/tomer/jenkins-flaskmyflaskproject.tar.gz
+                                 sudo tar -xzf /home/tomer/jenkins-flask/myflaskproject.tar.gz
                                 '
                             '''
                         }
