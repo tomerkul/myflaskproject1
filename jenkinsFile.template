@@ -9,7 +9,6 @@ pipeline {
             steps {
                 script {
                     env.TEST_IP = "44.202.63.7"
-                    env.PRODACT_IP = "54.209.127.11"
                     env.ANSIBLE_IP = "192.168.56.101"
                 }
                 sh 'echo "Performing cleanup..."'
@@ -73,7 +72,6 @@ pipeline {
                                     sudo bash /home/ec2-user/myflaskproject/tests/tests.sh
                                     sudo bash /home/ec2-user/myflaskproject/flaskstop.sh
                                     exit
-                                    ls
                                 '
                             '''
                         }
