@@ -29,7 +29,7 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) { 
                     sshagent(['SSH_VM']) {
                         sh '''
-                            sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject tomer@$ANSIBLE_IP:/home/tomer/
+                            sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -r myflaskproject tomer@$ANSIBLE_IP:/home/tomer/
                             ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$ANSIBLE_IP '
                                    pip3 install docker
                                    sudo python3 /home/tomer/myflaskproject/sample-flask/findlastversion.py
