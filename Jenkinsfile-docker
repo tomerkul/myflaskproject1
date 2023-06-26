@@ -32,6 +32,7 @@ pipeline {
                             sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject tomer@$ANSIBLE_IP:/home/tomer/flask-docker
                             ssh-keyscan $ANSIBLE_IP >> /var/lib/jenkins/.ssh/known_hosts
                             ssh -o StrictHostKeyChecking=no -i $KEY_FILE tomer@$ANSIBLE_IP '
+                                   docker version
                                    pip3 install docker
                                    python3 /home/tomer/myflaskproject/sample-flask/findlastversion.py
                                    exit
