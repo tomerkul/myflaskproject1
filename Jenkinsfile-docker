@@ -1,1 +1,57 @@
+pipeline {
+    agent any
+    triggers {
+        pollSCM('*/5 * * * *')
+    }
 
+    stages {
+        stage('Cleanup') {
+            steps {
+                script {
+                    env.TEST_IP = "54.84.19.43"
+                    env.ANSIBLE_IP = "192.168.56.101"
+                }
+                sh 'echo "Performing cleanup..."'
+                sh 'rm -rf *'
+            }
+        }
+
+        stage('Clone') {
+            steps {
+                sh 'echo "Building..."'
+                sh 'git clone https://github.com/tomerkul/myflaskproject.git'
+                sh 'ls'
+            }
+        }
+
+       stage('upload to docker hub') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) { 
+                    sshagent(['SSH_VM']) {
+                        sh '''
+                            sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no myflaskproject tomer@$ANSIBLE_IP:/home/tomer/
+                            ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$ANSIBLE_IP '
+                                   pip3 install docker
+                                   sudo python3 /home/tomer/myflaskproject/sample-flask/findlastversion.py
+                                   exit
+                                '
+                        '''               
+            }
+        }
+    }
+}
+      stage('upload to test-server') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) { 
+                    sshagent(['SSH_VM']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$ANSIBLE_IP '
+                                   python3 sendtoec2.py
+                                '
+                        '''               
+            }
+        }
+    }
+}
+}
+}
