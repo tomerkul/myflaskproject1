@@ -12,7 +12,7 @@ pipeline {
                     env.ANSIBLE_IP = "192.168.56.101"
                 }
                 sh 'echo "Performing cleanup..."'
-                sh 'rm -rf *'
+                sh 'sudo rm -rf *'
             }
         }
 
