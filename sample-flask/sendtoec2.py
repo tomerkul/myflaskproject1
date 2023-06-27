@@ -1,41 +1,50 @@
-import subprocess
 import docker
+import subprocess
 
-# Define the image name and tag
-image_name = "tomerkul/myflask"
-image_tag = "1.1"
+# SSH connection details
+ssh_key_path = "/home/tomer/.ssh/mykeyVir.pem"
+ssh_user = "ec2-user"
+ec2_instance_ip = "3.87.44.92"
 
-# Create a Docker client
+# Find and kill the process running on port 5000
+command = f"ssh -i {ssh_key_path} {ssh_user}@{ec2_instance_ip} 'sudo lsof -t -i :5000 -sTCP:LISTEN -P -n'"
+process = subprocess.run(command, shell=True, capture_output=True, text=True)
+if process.returncode == 0:
+    process_id = process.stdout.strip()
+    # Kill the process
+    command = f"ssh -i {ssh_key_path} {ssh_user}@{ec2_instance_ip} 'sudo kill -9 {process_id}'"
+    subprocess.run(command, shell=True, check=True)
+
+# Find the latest version of the image
 client = docker.from_env()
+images = client.images.list()
 
-# Reload the Docker images by listing them again
-client.images.list()
+existing_versions = [float(image.tags[0].split(":")[1]) for image in images if image.tags and image.tags[0].startswith("tomerkul/myflask:")]
 
-# Find the image with the specified name and tag
-image = None
-for img in client.images.list():
-    if f"{image_name}:{image_tag}" in img.tags:
-        image = img
-        break
+if existing_versions:
+    latest_version = max(existing_versions)
+    next_version = latest_version + 0.1
+else:
+    next_version = 1.0
 
-if image is None:
-    print(f"No image found for {image_name}:{image_tag}")
-    exit()
+# Format the version number to one decimal place
+next_version = f"{next_version:.1f}"
 
-# Save the Docker image as a tar file
-tar_file = f"{image_name.replace('/', '-')}-{image_tag}.tar"
-subprocess.run(["docker", "save", "-o", tar_file, f"{image.id}"])
+image_name = f"tomerkul/myflask:{latest_version}"
 
-# Define the EC2 instance details
-ec2_user = "ec2-user"
-ec2_instance = "44.202.126.178"
-key_file = "/home/tomer/.ssh/mykeyVir.pem"
-remote_path = "/home/ec2-user"
+# Save the image as a tar file
+subprocess.run(["docker", "save", "-o", "latest_image.tar", image_name], check=True)
 
-# Transfer the Docker image to the EC2 instance using SCP
-subprocess.run(["scp", "-i", key_file, "-o", "StrictHostKeyChecking=no", tar_file, f"{ec2_user}@{ec2_instance}:{remote_path}"])
+# Transfer the tar file to the EC2 instance
+subprocess.run(["scp", "-i", ssh_key_path, "-o", "StrictHostKeyChecking=no", "latest_image.tar", f"{ssh_user}@{ec2_instance_ip}:/home/ec2-user"], check=True)
 
-# Run the Docker image on the EC2 instance
-subprocess.run(["ssh", "-i", key_file, "-o", "StrictHostKeyChecking=no", f"{ec2_user}@{ec2_instance}", f"docker load -i {remote_path}/{tar_file}"])
-subprocess.run(["ssh", "-i", key_file, "-o", "StrictHostKeyChecking=no", f"{ec2_user}@{ec2_instance}", f"docker run -d -p 5000:5000 {image_name}:{image_tag}"])
+# Remove the local tar file
+subprocess.run(["rm", "latest_image.tar"], check=True)
+
+# Run the downloaded image on the EC2 instance
+command = f"ssh -i {ssh_key_path} {ssh_user}@{ec2_instance_ip} 'docker load -i /home/ec2-user/latest_image.tar'"
+subprocess.run(command, shell=True, check=True)
+
+command = f"ssh -i {ssh_key_path} {ssh_user}@{ec2_instance_ip} 'docker run -d -p 5000:5000 {image_name}'"
+subprocess.run(command, shell=True, check=True)
 
