@@ -22,7 +22,7 @@ pipeline {
                 sh 'ls'
             }
         }
-        
+        /*
         stage('Upload to Docker Hub') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
@@ -39,7 +39,7 @@ pipeline {
                 }
             }
         }
-        
+        */
         stage('testing') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'docker-test', keyFileVariable: 'KEY_FILE')]) {
