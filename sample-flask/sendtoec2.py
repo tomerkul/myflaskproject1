@@ -42,7 +42,7 @@ subprocess.run(["scp", "-i", ssh_key_path, "-o", "StrictHostKeyChecking=no", "la
 subprocess.run(["rm", "latest_image.tar"], check=True)
 
 # Run the downloaded image on the EC2 instance
-command = f"ssh -i {ssh_key_path} {ssh_user}@{ec2_instance_ip} 'docker load -i /home/ec2-user/latest_image.tar'"
+command = f"ssh -i {ssh_key_path} {ssh_user}@{ec2_instance_ip} 'docker load -i /home/ec2-user/latest_image.tar -t {image_name}'"
 subprocess.run(command, shell=True, check=True)
 
 command = f"ssh -i {ssh_key_path} {ssh_user}@{ec2_instance_ip} 'docker run -d -p 5000:5000 {image_name}'"
