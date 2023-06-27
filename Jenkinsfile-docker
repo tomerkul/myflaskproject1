@@ -24,9 +24,9 @@ pipeline {
             }
         }
 
-       stage('upload to docker hub') {
+        stage('Upload to Docker Hub') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) { 
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
                     sshagent(['SSH_VM']) {
                         sh '''
                             sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject tomer@$ANSIBLE_IP:/home/tomer/flask-docker
@@ -35,14 +35,15 @@ pipeline {
                                    cd /home/tomer/flask-docker/myflaskproject/sample-flask
                                    python3 /home/tomer/myflaskproject/sample-flask/findlastversion.py
                                 '
-                        '''               
+                        '''
+                    }
+                }
             }
         }
-    }
-}
-   stage('upload to docker hub') {
+
+        stage('Upload to Docker Hub 2') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) { 
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
                     sshagent(['SSH_VM']) {
                         sh '''
                             sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject tomer@$ANSIBLE_IP:/home/tomer/flask-docker
@@ -51,10 +52,10 @@ pipeline {
                                    cd /home/tomer/flask-docker/myflaskproject/sample-flask
                                    python3 /home/tomer/myflaskproject/sample-flask/sendtoec2.py
                                 '
-                        '''               
+                        '''
+                    }
+                }
             }
         }
     }
-}   
-}
 }
