@@ -49,7 +49,7 @@ pipeline {
                                docker stop $(docker ps -q)
                                python3 pulllatest.py
                                python3 runlatest.py
-                               curl "$TEST_IP:5000"
+                               curl "http://$TEST_IP:5000"
                             '
                     '''
                 }
