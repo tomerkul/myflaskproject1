@@ -3,7 +3,6 @@ pipeline {
     triggers {
         pollSCM('*/5 * * * *')
     }
-
     stages {
         stage('Cleanup') {
             steps {
@@ -15,7 +14,6 @@ pipeline {
                 sh 'sudo rm -rf *'
             }
         }
-
         stage('Clone') {
             steps {
                 sh 'echo "Building..."'
@@ -23,7 +21,7 @@ pipeline {
                 sh 'ls'
             }
         }
-/*
+        /*
         stage('Upload to Docker Hub') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
@@ -40,22 +38,20 @@ pipeline {
                 }
             }
         }
-*/
+        */
         stage('testing') {
             steps {
-               withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
-                        sh '''
-                            ssh-keyscan $TEST_IP >> /var/lib/jenkins/.ssh/known_hosts
-                            sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject/sample-flask/runlatest.py ec2-user@$TEST_IP:/home/ec2-user/
-                            ls
-                            ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$TEST_IP '
-                                   python3 runlatest.py
-                                '
-                        '''
-                    }
+                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
+                    sh '''
+                        ssh-keyscan $TEST_IP >> /var/lib/jenkins/.ssh/known_hosts
+                        sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject/sample-flask/runlatest.py ec2-user@$TEST_IP:/home/ec2-user/
+                        ls
+                        ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$TEST_IP '
+                               python3 runlatest.py
+                            '
+                    '''
                 }
             }
         }
     }
 }
-
