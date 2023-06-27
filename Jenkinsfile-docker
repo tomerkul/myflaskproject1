@@ -50,7 +50,7 @@ pipeline {
                                docker stop $(docker ps -q)
                                python3 pulllatest.py
                                python3 runlatest.py
-                               sleep 6
+                               sleep 15
                                curl "http://3.87.44.92:5000"
                             '
                     '''
