@@ -41,7 +41,7 @@ pipeline {
             }
         }
 
-        stage('Upload to Docker Hub 2') {
+        stage('testing') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
                     sshagent(['SSH_VM']) {
