@@ -41,7 +41,7 @@ pipeline {
         */
         stage('testing') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'SSH_ec2', keyFileVariable: 'KEY_FILE')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'docker-test', keyFileVariable: 'KEY_FILE')]) {
                     sh '''
                         ssh-keyscan $TEST_IP >> /var/lib/jenkins/.ssh/known_hosts
                         sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject/sample-flask/runlatest.py ec2-user@$TEST_IP:/home/ec2-user/
