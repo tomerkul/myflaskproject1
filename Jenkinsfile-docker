@@ -9,6 +9,7 @@ pipeline {
                 script {
                     env.TEST_IP = "3.87.44.92"
                     env.ANSIBLE_IP = "192.168.56.101"
+                    env.DEPLOY_IP = "18.208.153.97"
                 }
                 sh 'echo "Performing cleanup..."'
                 sh 'sudo rm -rf *'
@@ -56,5 +57,20 @@ pipeline {
                 }
             }
         }
+        stage('DEPLOY') {
+                    steps {
+                        withCredentials([sshUserPrivateKey(credentialsId: 'docker-test', keyFileVariable: 'KEY_FILE')]) {
+                            sh '''
+                                ssh-keyscan $DEPLOY_IP >> /var/lib/jenkins/.ssh/known_hosts
+                                sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject/sample-flask/runlatest.py myflaskproject/sample-flask/pulllatest.py ec2-user@$DEPLOY_IP:/home/ec2-user/
+                                ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$DEPLOY_IP '
+                                       docker stop $(docker ps -q)
+                                       python3 pulllatest.py
+                                       python3 runlatest.py
+                                    '
+                            '''
+                        }
+                    }
+                }
     }
 }
