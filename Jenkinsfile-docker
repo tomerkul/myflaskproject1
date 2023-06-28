@@ -49,7 +49,6 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$TEST_IP '
                                docker stop $(docker ps -q) //stoping all running containers
                                docker rm -f $(docker ps -aq) // removing all containers
-                               docker rmi -f $(docker images -q) // removing all old images before of pulling the latest version
                                python3 pulllatest.py //pulling the latest version of my image from docker hub
                                python3 runlatest.py //running the latest version of my image
                                sleep 15
@@ -68,7 +67,6 @@ pipeline {
                                 ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$DEPLOY_IP '
                                        docker stop $(docker ps -q) //stoping all running containers
                                        docker rm -f $(docker ps -aq) // removing all containers
-                                       docker rmi -f $(docker images -q) //pulling the latest version of my image from docker hub
                                        python3 pulllatest.py //pulling the latest version of my image from docker hub
                                        python3 runlatest.py //running the latest version of my image
                                     '
