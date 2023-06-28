@@ -1,4 +1,4 @@
-version: "3.8"
+kversion: "3.8"
 services:
   web:
     build:
@@ -15,8 +15,19 @@ services:
       - db
 
   db:
-    image: postgres:13
+    image: mysql:latest
+    restart: always
     environment:
-      - POSTGRES_USER=myuser
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_DB=mydatabase
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: tomer
+      MYSQL_PASSWORD: 1234
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+
+
+
+
