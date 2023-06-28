@@ -22,7 +22,7 @@ pipeline {
                 sh 'ls'
             }
         }
-        /*
+
         stage('Upload to Docker Hub') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'SSH_VM', keyFileVariable: 'KEY_FILE')]) {
@@ -32,14 +32,14 @@ pipeline {
                             ssh-keyscan $ANSIBLE_IP >> /var/lib/jenkins/.ssh/known_hosts
                             ssh -o StrictHostKeyChecking=no -i $KEY_FILE tomer@$ANSIBLE_IP '
                                    cd /home/tomer/flask-docker/myflaskproject/sample-flask
-                                   python3 /home/tomer/myflaskproject/sample-flask/findlastversion.py
+                                   python3 findlastversion.py
                                 '
                         '''
                     }
                 }
             }
         }
-        */
+
         stage('testing') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'docker-test', keyFileVariable: 'KEY_FILE')]) {
@@ -47,10 +47,10 @@ pipeline {
                         ssh-keyscan $TEST_IP >> /var/lib/jenkins/.ssh/known_hosts
                         sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject/sample-flask/runlatest.py myflaskproject/sample-flask/pulllatest.py ec2-user@$TEST_IP:/home/ec2-user/
                         ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$TEST_IP '
-                               docker stop $(docker ps -q) //stoping all running containers
-                               docker rm -f $(docker ps -aq) // removing all containers
-                               python3 pulllatest.py //pulling the latest version of my image from docker hub
-                               python3 runlatest.py //running the latest version of my image
+                               docker stop $(docker ps -q)
+                               docker rm -f $(docker ps -aq)
+                               python3 pulllatest.py
+                               python3 runlatest.py 
                                sleep 15
                                curl "http://3.87.44.92:5000"
                             '
@@ -65,10 +65,10 @@ pipeline {
                                 ssh-keyscan $DEPLOY_IP >> /var/lib/jenkins/.ssh/known_hosts
                                 sudo scp -i $KEY_FILE -o StrictHostKeyChecking=no -rp myflaskproject/sample-flask/runlatest.py myflaskproject/sample-flask/pulllatest.py ec2-user@$DEPLOY_IP:/home/ec2-user/
                                 ssh -o StrictHostKeyChecking=no -i $KEY_FILE ec2-user@$DEPLOY_IP '
-                                       docker stop $(docker ps -q) //stoping all running containers
-                                       docker rm -f $(docker ps -aq) // removing all containers
-                                       python3 pulllatest.py //pulling the latest version of my image from docker hub
-                                       python3 runlatest.py //running the latest version of my image
+                                       docker stop $(docker ps -q) 
+                                       docker rm -f $(docker ps -aq) 
+                                       python3 pulllatest.py 
+                                       python3 runlatest.py 
                                     '
                             '''
                         }
